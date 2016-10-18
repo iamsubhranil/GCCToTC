@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class AnalyzeFileAndConvert {
 
     public static void main(String[] args) {
-        main2(new String[]{"E:\\myprogs\\p2_cv\\cv.c"});
+        main2(new String[]{"E:\\myprogs\\p7_basic_arithmetic\\basic_arithmetics.c"});
     }
 
     private static void main2(String[] args) {
@@ -33,7 +33,11 @@ public class AnalyzeFileAndConvert {
                 String dateTime = Files.readAttributes(f.toPath(), BasicFileAttributes.class).creationTime().toString();
                 lines = manipulateLines(lines, dateTime);
                 System.out.println("Modified source : ");
+                File newFile = new File(f.getAbsolutePath().replace(".c", "_tc.c"));
+                PrintStream printStream = new PrintStream(new FileOutputStream(newFile, false));
                 lines.forEach(System.out::println);
+                lines.forEach(printStream::println);
+                printStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -43,7 +47,7 @@ public class AnalyzeFileAndConvert {
     }
 
     private static ArrayList<String> manipulateLines(ArrayList<String> lines, String dateTime) throws IOException {
-        if (!(lines.get(1).contains("#include"))) {
+        if (!(lines.get(0).contains("#include"))) {
             System.out.println("Either this file is not an c source file or it has already been modified. " +
                     "If you still want to continue with the process, press F : ");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
