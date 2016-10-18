@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Author : Nil
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class AnalyzeFileAndConvert {
 
     public static void main(String[] args) {
-        main2(new String[]{"E:\\myprogs\\p7_basic_arithmetic\\basic_arithmetics.c"});
+        main2(new String[]{"E:\\myprogs\\p12_distance_at_intervals\\distance_at_intervals.c"});
     }
 
     private static void main2(String[] args) {
@@ -57,11 +58,24 @@ public class AnalyzeFileAndConvert {
                 System.exit(1);
             }
         }
-        lines.ensureCapacity(lines.size() + 8);
-        lines.add(0, "/* Author : Subhranil Mukherjee");
+        lines.ensureCapacity(lines.size() + 9);
+
+        String author = "Unknown", gccVer = "Unknown", vimVer = "Unknown";
+
+        Properties p = new Properties();
+        try {
+            p.load(new FileInputStream("default.prop"));
+            author = p.getProperty("author") == null ? author : p.getProperty("author");
+            gccVer = p.getProperty("gcc") == null ? gccVer : p.getProperty("gcc");
+            vimVer = p.getProperty("vim") == null ? vimVer : p.getProperty("vim");
+        } catch (IOException ignored) {
+        }
+
+        lines.add(0, "/* Author : " + author);
         lines.add(1, "   Created on : " + dateTime);
-        lines.add(2, "   Environment : gcc 4.8");
-        lines.add(3, "   Editor : vim 7.4.52 */");
+        lines.add(2, "   Environment : gcc " + gccVer);
+        lines.add(3, "   Editor : vim " + vimVer);
+        lines.add(4, "   TC version by : GCCToTC(https://github.com/iamsubhranil/GCCToTC) */");
         final boolean[] declarationFinished = {false};
         final boolean[] hasConio = {false};
         final int[] counter = {0, 0, 0};
