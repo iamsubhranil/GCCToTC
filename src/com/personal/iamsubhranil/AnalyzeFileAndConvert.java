@@ -75,13 +75,13 @@ public class AnalyzeFileAndConvert {
             }
             counter[0]++;
         });
-        if (!hasConio[0]) {
-            lines.add((counter[2] - 1), "#include<conio.h>");
-        }
         lines.set(counter[2], lines.get(counter[2]).replace("void", "int"));
         lines.add(counter[1], "\tclrscr();");
         lines.add(lines.size() - 2, "\tgetch();");
         lines.add(lines.size() - 1, "\treturn 0;");
+        if (!hasConio[0]) {
+            lines.add((counter[2] - 1), "#include<conio.h>");
+        }
         return lines;
     }
 
