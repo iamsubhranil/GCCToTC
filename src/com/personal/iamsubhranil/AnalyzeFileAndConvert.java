@@ -31,6 +31,7 @@ public class AnalyzeFileAndConvert {
                     lines.add(cache);
                 }
                 String dateTime = Files.readAttributes(f.toPath(), BasicFileAttributes.class).creationTime().toString();
+                dateTime = dateTime.replace("T", " at ").replace("Z", "");
                 lines = manipulateLines(lines, dateTime);
                 System.out.println("Modified source : ");
                 File newFile = new File(f.getAbsolutePath().replace(".c", "_tc.c"));
