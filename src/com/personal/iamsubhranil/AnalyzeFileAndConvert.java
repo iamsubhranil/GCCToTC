@@ -14,7 +14,26 @@ import java.util.Properties;
 public class AnalyzeFileAndConvert {
 
     public static void main(String[] args) {
-        main2(new String[]{"E:\\myprogs\\p12_distance_at_intervals\\distance_at_intervals.c"});
+        //   main2(new String[]{"E:\\myprogs\\p9_triangle_vertices\\triangle_vertices.c"});
+        myprogs();
+    }
+
+    private static void myprogs() {
+        File f = new File("E:\\myprogs");
+        String[] sub = f.list();
+        if (sub != null) {
+            for (String s : sub) {
+                File f2 = new File(f + "\\" + s);
+                String[] subs = f2.list();
+                if (subs != null) {
+                    for (String ss : subs) {
+                        if (ss.endsWith(".c") && !ss.contains("_tc")) {
+                            main2(new String[]{f2 + "\\" + ss});
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private static void main2(String[] args) {
@@ -33,6 +52,7 @@ public class AnalyzeFileAndConvert {
                 }
                 String dateTime = Files.readAttributes(f.toPath(), BasicFileAttributes.class).creationTime().toString();
                 dateTime = dateTime.replace("T", " at ").replace("Z", "");
+                System.out.println("Modifying " + f.getName());
                 lines = manipulateLines(lines, dateTime);
                 System.out.println("Modified source : ");
                 File newFile = new File(f.getAbsolutePath().replace(".c", "_tc.c"));
@@ -55,7 +75,7 @@ public class AnalyzeFileAndConvert {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             String ch = bufferedReader.readLine();
             if (!(ch.equals("f") || ch.equals("F"))) {
-                System.exit(1);
+                throw new IOException("Execution terminated by the user!");
             }
         }
         lines.ensureCapacity(lines.size() + 9);
@@ -78,7 +98,7 @@ public class AnalyzeFileAndConvert {
         lines.add(4, "   TC version by : GCCToTC(https://github.com/iamsubhranil/GCCToTC) */");
         final boolean[] declarationFinished = {false};
         final boolean[] hasConio = {false};
-        final int[] counter = {0, 0, 0};
+        final int[] counter = {0, 0, 0, 0};
         lines.forEach(line -> {
             if (line.equals("#include<conio.h>")) {
                 hasConio[0] = true;
@@ -88,12 +108,15 @@ public class AnalyzeFileAndConvert {
                 declarationFinished[0] = true;
                 counter[1] = counter[0];
             }
+            if (line.contains("}")) {
+                counter[3] = counter[0];
+            }
             counter[0]++;
         });
         lines.set(counter[2], lines.get(counter[2]).replace("void", "int"));
         lines.add(counter[1], "\tclrscr();");
-        lines.add(lines.size() - 1, "\tgetch();");
-        lines.add(lines.size() - 1, "\treturn 0;");
+        lines.add(++counter[3], "\tgetch();");
+        lines.add(++counter[3], "\treturn 0;");
         if (!hasConio[0]) {
             lines.add((counter[2] - 1), "#include<conio.h>");
         }
