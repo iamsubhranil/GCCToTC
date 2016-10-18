@@ -54,20 +54,21 @@ public class AnalyzeFileAndConvert {
         }
         lines.ensureCapacity(lines.size() + 7);
         lines.add(0, "/* Author : Subhranil Mukherjee");
-        lines.add(1, " Created on : " + dateTime);
-        lines.add(2, " Environment : gcc");
-        lines.add(3, " Editor : vim */");
+        lines.add(1, "   Created on : " + dateTime);
+        lines.add(2, "   Environment : gcc");
+        lines.add(3, "   Editor : vim */");
         lines.add(4, "#include<conio.h>");
         final boolean[] declarationFinished = {false};
-        final int[] counter = {0};
+        final int[] counter = {0, 0};
         lines.forEach(line -> {
             if (line.contains("printf(") && !declarationFinished[0]) {
                 declarationFinished[0] = true;
-                lines.add(counter[0], "\tclrscr();");
+                counter[1] = counter[0];
             }
             counter[0]++;
         });
-        lines.add(lines.size() - 2, "\tgetch();");
+        lines.add(counter[1], "\tclrscr();");
+        lines.add(lines.size() - 1, "\tgetch();");
         return lines;
     }
 
