@@ -59,8 +59,8 @@ public class AnalyzeFileAndConvert {
         lines.ensureCapacity(lines.size() + 8);
         lines.add(0, "/* Author : Subhranil Mukherjee");
         lines.add(1, "   Created on : " + dateTime);
-        lines.add(2, "   Environment : gcc");
-        lines.add(3, "   Editor : vim */");
+        lines.add(2, "   Environment : gcc 4.8");
+        lines.add(3, "   Editor : vim 7.4.52 */");
         final boolean[] declarationFinished = {false};
         final boolean[] hasConio = {false};
         final int[] counter = {0, 0, 0};
