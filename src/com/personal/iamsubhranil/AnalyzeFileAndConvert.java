@@ -56,7 +56,7 @@ public class AnalyzeFileAndConvert {
                 System.exit(1);
             }
         }
-        lines.ensureCapacity(lines.size() + 9);
+        lines.ensureCapacity(lines.size() + 8);
         lines.add(0, "/* Author : Subhranil Mukherjee");
         lines.add(1, "   Created on : " + dateTime);
         lines.add(2, "   Environment : gcc");
@@ -77,7 +77,7 @@ public class AnalyzeFileAndConvert {
         });
         lines.set(counter[2], lines.get(counter[2]).replace("void", "int"));
         lines.add(counter[1], "\tclrscr();");
-        lines.add(lines.size() - 2, "\tgetch();");
+        lines.add(lines.size() - 1, "\tgetch();");
         lines.add(lines.size() - 1, "\treturn 0;");
         if (!hasConio[0]) {
             lines.add((counter[2] - 1), "#include<conio.h>");
