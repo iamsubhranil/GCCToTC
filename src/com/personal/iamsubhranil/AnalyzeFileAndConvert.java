@@ -56,7 +56,7 @@ public class AnalyzeFileAndConvert {
                 System.exit(1);
             }
         }
-        lines.ensureCapacity(lines.size() + 7);
+        lines.ensureCapacity(lines.size() + 8);
         lines.add(0, "/* Author : Subhranil Mukherjee");
         lines.add(1, "   Created on : " + dateTime);
         lines.add(2, "   Environment : gcc");
@@ -65,6 +65,14 @@ public class AnalyzeFileAndConvert {
         final boolean[] declarationFinished = {false};
         final int[] counter = {0, 0};
         lines.forEach(line -> {
+            if (line.contains("void main(){")) {
+                counter[1] = counter[0];
+            }
+            counter[0]++;
+        });
+        lines.set(counter[1], lines.get(counter[1]).replace("void", "int"));
+        counter[0] = 0;
+        lines.forEach(line -> {
             if (line.contains("printf(") && !declarationFinished[0]) {
                 declarationFinished[0] = true;
                 counter[1] = counter[0];
@@ -72,7 +80,8 @@ public class AnalyzeFileAndConvert {
             counter[0]++;
         });
         lines.add(counter[1], "\tclrscr();");
-        lines.add(lines.size() - 1, "\tgetch();");
+        lines.add(lines.size() - 2, "\tgetch();");
+        lines.add(lines.size() - 1, "\treturn 0;");
         return lines;
     }
 
