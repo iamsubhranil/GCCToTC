@@ -56,24 +56,28 @@ public class AnalyzeFileAndConvert {
                 System.exit(1);
             }
         }
-        lines.ensureCapacity(lines.size() + 8);
+        lines.ensureCapacity(lines.size() + 9);
         lines.add(0, "/* Author : Subhranil Mukherjee");
         lines.add(1, "   Created on : " + dateTime);
         lines.add(2, "   Environment : gcc");
         lines.add(3, "   Editor : vim */");
-        lines.add(4, "#include<conio.h>");
         final boolean[] declarationFinished = {false};
+        final boolean[] hasConio = {false};
         final int[] counter = {0, 0, 0};
         lines.forEach(line -> {
-            if (line.contains("void main(){")) {
+            if (line.equals("#include<conio.h>")) {
+                hasConio[0] = true;
+            } else if (line.equals("void main(){")) {
                 counter[2] = counter[0];
-            }
-            if (line.contains("printf(") && !declarationFinished[0]) {
+            } else if (line.contains("printf(") && !declarationFinished[0]) {
                 declarationFinished[0] = true;
                 counter[1] = counter[0];
             }
             counter[0]++;
         });
+        if (!hasConio[0]) {
+            lines.add((counter[2] - 1), "#include<conio.h>");
+        }
         lines.set(counter[2], lines.get(counter[2]).replace("void", "int"));
         lines.add(counter[1], "\tclrscr();");
         lines.add(lines.size() - 2, "\tgetch();");
