@@ -63,22 +63,18 @@ public class AnalyzeFileAndConvert {
         lines.add(3, "   Editor : vim */");
         lines.add(4, "#include<conio.h>");
         final boolean[] declarationFinished = {false};
-        final int[] counter = {0, 0};
+        final int[] counter = {0, 0, 0};
         lines.forEach(line -> {
             if (line.contains("void main(){")) {
-                counter[1] = counter[0];
+                counter[2] = counter[0];
             }
-            counter[0]++;
-        });
-        lines.set(counter[1], lines.get(counter[1]).replace("void", "int"));
-        counter[0] = 0;
-        lines.forEach(line -> {
             if (line.contains("printf(") && !declarationFinished[0]) {
                 declarationFinished[0] = true;
                 counter[1] = counter[0];
             }
             counter[0]++;
         });
+        lines.set(counter[2], lines.get(counter[2]).replace("void", "int"));
         lines.add(counter[1], "\tclrscr();");
         lines.add(lines.size() - 2, "\tgetch();");
         lines.add(lines.size() - 1, "\treturn 0;");
